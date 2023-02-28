@@ -1,0 +1,14 @@
+#!/bin/bash
+
+arg=$1
+
+if [ -n "$arg" ]; then
+	path=$(which $arg)
+    if [ -n "$path" ];then
+		echo "Package already installed"
+	elif [ "$path" = "" ];then
+		sudo apt update && sudo apt install -y $arg
+	fi
+else
+    echo "Please provide the package name to install"
+fi
