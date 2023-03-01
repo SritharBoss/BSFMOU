@@ -2,20 +2,28 @@
 
 arg=$1
 
-if [ -n "$arg" ]; then
-	path=$(which $arg)
+[ ! -n "$arg" ] && echo "Please provide the package name to uninstall" && exit 1;
 
-	if [ -n "$path" ];then
-		echo -n "Do you want to completely remove with configuration files? (y/n)";
-		read conf;
-		if [ "$conf" = "Y" -o "$conf" = "y" -o "$conf" = "Yes" -o "$conf" = "yes" ];then
-			sudo apt  purge -y $arg && sudo apt autoremove && sudo apt clean 
-		elif [ "$conf" = "N" -o "$conf" = "n" -o "$conf" = "No" -o "$conf" = "no" ];then
-			sudo apt remove -y $arg && sudo apt autoremove && sudo apt clean
-		fi
-	elif [ "$path" = "" ];then
-		echo "Package not found on the system.."
-	fi
-else
-    echo "Please provide the package name to uninstall"
-fi
+[ ! -n "$(which $arg)" ] && echo "Package not found on the system.." && exit 1;
+
+uninstall(){
+	sudo apt remove -y $arg;
+	sudo apt autoremove;
+	sudo apt clean;
+	exit 0;
+}
+
+uninstall_all(){
+	sudo apt  purge -y $arg;
+	sudo apt autoremove;
+	sudo apt clean
+	exit 0;
+}
+
+echo -n "Do you want to completely remove with configuration files? (y/n)";
+
+read conf;
+
+[ "$conf" = "Y" -o "$conf" = "y" -o "$conf" = "Yes" -o "$conf" = "yes" ] && uninstall_all;
+
+[ "$conf" = "N" -o "$conf" = "n" -o "$conf" = "No" -o "$conf" = "no" ] && uninstall;

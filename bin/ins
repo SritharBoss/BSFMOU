@@ -2,20 +2,25 @@
 
 arg=$1
 
-if [ -n "$arg" ]; then
-	path=$(which $arg)
-    if [ -n "$path" ];then
-		echo "Package already installed"
-	elif [ "$path" = "" ];then
-		echo -n "Do you want to update your apt repo? (y/n) "
-		read conf
-		if [ "$conf" = "Y" -o "$conf" = "y" -o "$conf" = "Yes" -o "$conf" = "yes" ];then
-                        sudo apt update && sudo apt install -y $arg 
-                elif [ "$conf" = "N" -o "$conf" = "n" -o "$conf" = "No" -o "$conf" = "no" ];then
-                        sudo apt install -y $arg
-                fi
+[ ! -n "$arg" ] && echo "Please provide the package name to install" && exit 1;
 
-	fi
-else
-    echo "Please provide the package name to install"
-fi
+[ -n "$(which $arg)" ] && echo "Package already installed" && exit 1;
+
+install(){
+	sudo apt update;
+	sudo apt install -y $arg;
+	exit 0;
+}
+
+install_no_repo(){
+	sudo apt install -y $arg;
+	exit 0;
+}
+
+echo -n "Do you want to update your apt repo? (y/n) "
+
+read conf
+
+[ "$conf" = "Y" -o "$conf" = "y" -o "$conf" = "Yes" -o "$conf" = "yes" ] && install;
+
+[ "$conf" = "N" -o "$conf" = "n" -o "$conf" = "No" -o "$conf" = "no" ] && install_no_repo;
