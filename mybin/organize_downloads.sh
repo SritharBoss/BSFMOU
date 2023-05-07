@@ -1,8 +1,5 @@
 #!/bin/bash
 
-echo "Hello there, ${USER^},"
-echo "Organizing things up....."
-
 dir='/mnt/Data/Downloads'
 
 #Moving Documents
@@ -23,3 +20,8 @@ mv $dir/*.tar $dir/*.zip $dir/*.gz /mnt/Data/Downloads/Compressed 2>/dev/null
 mv $dir/*.torrent /mnt/Data/Downloads/Torrent 2>/dev/null
 
 #Misc
+
+
+echo "$(date "+%m-%d-%Y %H:%M --- ")[organize_download] Successfully Completed" >> /home/srithar/log/cron_status.txt 2>&1
+
+exit 0;
