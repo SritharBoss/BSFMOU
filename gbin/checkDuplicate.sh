@@ -1,10 +1,18 @@
 #!/bin/bash
 
+# Author: Srithar
+# Created: 10th July 2023
+# Last Modified: 10th July 2023
+
+# Description:
+# Compare one with another in the given directory
+# If any Duplicate file Found, it will print it in the console
+
 arg=$1
 
 [ -z "$arg" ] && arg="."
 
-count=$(find "$arg" -type f 2>/dev/null | head -n 10000 | wc -l)
+count=$(find "$arg" -type f 2>/dev/null | head -n 1000 | wc -l)
 
 if [ $count == 1000 ]; then
 	echo "Too Many Files to Compare.. Exiting.." && exit 1;
@@ -13,7 +21,6 @@ fi
 # Iterate over files in the current directory
 
 IFS=$'\n'
-b=0
 
 declare -A arr
 
@@ -27,3 +34,7 @@ for file1 in $(find "$arg" -type f); do
 		done
 	fi
 done
+
+read -p "Press Any Key To Close"
+
+exit 0;
