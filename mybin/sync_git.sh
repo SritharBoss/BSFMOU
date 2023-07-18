@@ -12,6 +12,8 @@ file="/mnt/Data/gitpath"
 
 [[ -f "$1" ]] && file="$1"
 
+echo -n "$(date "+%m-%d-%Y %H:%M --- ")" >> /home/srithar/log/cron_status.txt 2>&1
+
 
 cat "$file" | while read line 
 do
@@ -22,6 +24,8 @@ do
 			notify-send "Sync Pending $line" "$(git status -s)";
 		fi
 	else
-		echo "Error while pulling" && exit 1
+		echo "Error while pulling" >> /home/srithar/log/cron_status.txt; exit 1
 	fi
 done
+
+echo "Git Sync Done.." >> /home/srithar/log/cron_status.txt
