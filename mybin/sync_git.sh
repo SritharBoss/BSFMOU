@@ -14,6 +14,8 @@ file="/mnt/Data/gitpath"
 
 echo -n "$(date "+%m-%d-%Y %H:%M --- ")" >> /home/srithar/log/cron_status.txt 2>&1
 
+export DISPLAY=:0
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
 
 cat "$file" | while read line 
 do
