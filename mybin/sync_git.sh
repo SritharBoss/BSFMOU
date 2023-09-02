@@ -21,9 +21,14 @@ cat "$file" | while read line
 do
 	cd $line;
 	echo "Processing --> $line"
+	
 	if [[ $(git pull) ]]; then
 		if [[ $(git status -s | wc -l) > 0 ]]; then
-			notify-send "Sync Pending $line" "$(git status -s)";
+			if [[ "$line" == '/mnt/Data/Docs' ]]; then
+				git add . && git commit -m 'Auto Commit from crontab' && git push;
+			else
+				notify-send "Sync Pending $line" "$(git status -s)";
+			fi
 		fi
 	else
 		echo "Error while pulling" >> /home/srithar/log/cron_status.txt; exit 1
