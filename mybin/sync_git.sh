@@ -25,10 +25,10 @@ do
 	if [[ $(git pull) ]]; then
 		if [[ $(git status -s | wc -l) > 0 ]]; then
 			if [[ "$line" == '/mnt/Data/Docs' ]]; then
-				notify-send "Auto Committed : $line" "$(git status -s)";
+				notify-send -i "$HOME/.icons/tick.svg" "Auto Committed : $line" "$(git status -s)";
 				git add . && git commit -m 'Auto Commit from crontab' && git push;
 			else
-				notify-send "Sync Pending $line" "$(git status -s)";
+				notify-send -i "$HOME/.icons/warning.png" "Sync Pending $line" "$(git status -s)";
 			fi
 		fi
 	else
