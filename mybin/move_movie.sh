@@ -61,7 +61,7 @@ select lang in Tamil English Others/Malayalam Others/Telugu Others/Korean Others
 do
 	moviefolder=$moviefolder
     movie="$(basename "$(echo $1)")"
-    pattern="^([a-zA-Z0-9 -]*)\s*\(([0-9]{4})\)"
+    pattern="^([a-zA-Z0-9 -:]*)\s*\(([0-9]{4})\)"
 	cd "$(dirname "$1")"
 	movie_edit=$(echo "$movie" | sed 's/\([ -]*[([][a-zA-Z0-9]*.[a-zA-Z]\{2,6\}[])][ -]*\)//g')
 	[[ -n $2 ]] && [[ "$1" == *.mkv ]] && DOSUBMUX "$1" "$2" && exit 0;
