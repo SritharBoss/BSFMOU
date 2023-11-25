@@ -1,3 +1,3 @@
-#/bin/bash
+#!/bin/bash
 
-echo "$(realpath $1)" | xclip
+realpath "$1" | xclip

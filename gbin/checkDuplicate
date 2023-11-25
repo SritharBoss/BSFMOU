@@ -8,15 +8,14 @@
 # Compare one with another in the given directory
 # If any Duplicate file Found, it will print it in the console
 
-
 while getopts "p:d:hs:r" opt; do
 	case "$opt" in
-		p) arg="${OPTARG}";;
-		d) depth="${OPTARG}";;
-		h) echo -e "USAGE --> \np - Path to scan \nd - Max Depth to scan in sub directories\ns - max file size that it compares (uses find command's like size +100k +1G)\nr - Remove the duplicate file without asking.." && exit 0;;
-		s) size=$OPTARG;;
-		r) remove="remove";;
-		*) echo "Invalid Option; -h for Help" && exit 1;;
+	p) arg="${OPTARG}" ;;
+	d) depth="${OPTARG}" ;;
+	h) echo -e "USAGE --> \np - Path to scan \nd - Max Depth to scan in sub directories\ns - max file size that it compares (uses find command's like size +100k +1G)\nr - Remove the duplicate file without asking.." && exit 0 ;;
+	s) size=$OPTARG ;;
+	r) remove="remove" ;;
+	*) echo "Invalid Option; -h for Help" && exit 1 ;;
 	esac
 done
 
@@ -25,26 +24,26 @@ green='\033[01;32m'
 yellow='\033[0;33m'
 off='\033[0m'
 
-[ -z "$arg" ] && arg="." || [ "$arg" != "." ] && [ ! -e "$arg" ] && echo "Given Directory not exists.. " && exit 2;
+[ -z "$arg" ] && arg="." || [ "$arg" != "." ] && [ ! -e "$arg" ] && echo "Given Directory not exists.. " && exit 2
 
 find_cmd="find \"$arg\""
 
 if [[ -n "$depth" ]]; then
-  if [[ "$depth" =~ ^[0-9]+$ ]]; then
-    find_cmd+=" -maxdepth $depth"
-  else
-    echo "Please provide valid Depth in Numbers."
-    exit 3
-  fi
+	if [[ "$depth" =~ ^[0-9]+$ ]]; then
+		find_cmd+=" -maxdepth $depth"
+	else
+		echo "Please provide valid Depth in Numbers."
+		exit 3
+	fi
 fi
 
 if [[ -n "$size" ]]; then
-  if [[ "$size" =~ ^([+-][0-9]{1,6}[bcwkMG])$ ]]; then
-    find_cmd+=" -size $size"
-  else
-    echo "Please provide valid Size Ex. +100k, +2048c, -10G"
-    exit 4
-  fi
+	if [[ "$size" =~ ^([+-][0-9]{1,6}[bcwkMG])$ ]]; then
+		find_cmd+=" -size $size"
+	else
+		echo "Please provide valid Size Ex. +100k, +2048c, -10G"
+		exit 4
+	fi
 fi
 
 find_cmd+=" -type f"
@@ -52,7 +51,7 @@ find_cmd+=" -type f"
 count=$(eval "$find_cmd" 2>/dev/null | head -n 1000 | wc -l)
 
 if [ "$count" == 1000 ]; then
-	echo "Too Many Files to Compare.. Exiting.." && exit 5;
+	echo "Too Many Files to Compare.. Exiting.." && exit 5
 fi
 
 # Iterate over files in the current directory
@@ -65,23 +64,22 @@ progress=0
 echo -e "${green}Total ${count} files... Directory --> $(realpath "$arg")${off}\n"
 
 for file1 in $(eval "$find_cmd" 2>/dev/null); do
-	progress=$((progress+1));
-	echo -en "\033[K${yellow}Scanning  $((progress*100/count))% --> $file1 ${off}\r"
+	progress=$((progress + 1))
+	echo -en "\033[K${yellow}Scanning  $((progress * 100 / count))% --> $file1 ${off}\r"
 	if [ "$file1" != "${arr[$file1]}" ]; then
 		for file2 in $(eval "$find_cmd" 2>/dev/null); do
 			if [ "$file1" != "$file2" ] && cmp -s "$file1" "$file2"; then
-				if [ "$remove" == "remove" ];then
-					i=$((i+1));
+				if [ "$remove" == "remove" ]; then
+					i=$((i + 1))
 					echo -en "\033[K"
-					select s in "$file1" "$file2" "Skip"
-					do
+					select s in "$file1" "$file2" "Skip"; do
 						if [ "$s" != "Skip" ]; then
 							rm "$s" && echo -e "${red}Removed $s${off}" || echo "Error While Deleting $s"
 						fi
-					break
+						break
 					done
-				elif [ "$(wc -l < "$file1")" != 0 ]; then
-					i=$((i+1));
+				elif [ "$(wc -l <"$file1")" != 0 ]; then
+					i=$((i + 1))
 					echo "Duplicate --> $file1 --> $file2"
 				fi
 				arr["$file2"]="$file2"
@@ -96,4 +94,4 @@ read -n 1 -s -r -p "Press any key to continue"
 
 echo
 
-exit 0;
+exit 0

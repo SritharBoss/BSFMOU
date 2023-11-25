@@ -1,26 +1,26 @@
 #!/bin/bash
 
-arg=$1
+arg="$1"
 
-[ ! -n "$arg" ] && echo "Please provide the package name to install" && exit 1;
+[ -z "$arg" ] && echo "Please provide the package name to install" && exit 1
 
-[ -n "$(which $arg)" ] && echo "Package already installed" && exit 1;
+[ -n "$(which "$arg")" ] && echo "Package already installed" && exit 1
 
-install(){
-	sudo apt update;
-	sudo apt install -y $arg;
-	exit 0;
+install() {
+	sudo apt update
+	sudo apt install -y "$arg"
+	exit 0
 }
 
-install_no_repo(){
-	sudo apt install -y $arg;
-	exit 0;
+install_no_repo() {
+	sudo apt install -y "$arg"
+	exit 0
 }
 
 echo -n "Do you want to update your apt repo? (y/n) "
 
 read conf
 
-[ "$conf" = "Y" -o "$conf" = "y" -o "$conf" = "Yes" -o "$conf" = "yes" ] && install;
+[ "$conf" = "Y" -o "$conf" = "y" -o "$conf" = "Yes" -o "$conf" = "yes" ] && install
 
-[ "$conf" = "N" -o "$conf" = "n" -o "$conf" = "No" -o "$conf" = "no" ] && install_no_repo;
+[ "$conf" = "N" -o "$conf" = "n" -o "$conf" = "No" -o "$conf" = "no" ] && install_no_repo
