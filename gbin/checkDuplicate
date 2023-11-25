@@ -13,7 +13,7 @@ while getopts "p:d:hs:r" opt; do
 	case "$opt" in
 		p) arg="${OPTARG}";;
 		d) depth="${OPTARG}";;
-		h) echo -e "USAGE --> \np - Path to scan \nd - Max Depth to scan in sub directories" && exit 0;;
+		h) echo -e "USAGE --> \np - Path to scan \nd - Max Depth to scan in sub directories\ns - max file size that it compares (uses find command's like size +100k +1G)\nr - Remove the duplicate file without asking.." && exit 0;;
 		s) size=$OPTARG;;
 		r) remove="remove";;
 		*) echo "Invalid Option; -h for Help" && exit 1;;
@@ -51,7 +51,7 @@ find_cmd+=" -type f"
 
 count=$(eval "$find_cmd" 2>/dev/null | head -n 1000 | wc -l)
 
-if [ $count == 1000 ]; then
+if [ "$count" == 1000 ]; then
 	echo "Too Many Files to Compare.. Exiting.." && exit 5;
 fi
 
@@ -71,6 +71,7 @@ for file1 in $(eval "$find_cmd" 2>/dev/null); do
 		for file2 in $(eval "$find_cmd" 2>/dev/null); do
 			if [ "$file1" != "$file2" ] && cmp -s "$file1" "$file2"; then
 				if [ "$remove" == "remove" ];then
+					i=$((i+1));
 					echo -en "\033[K"
 					select s in "$file1" "$file2" "Skip"
 					do
@@ -79,11 +80,11 @@ for file1 in $(eval "$find_cmd" 2>/dev/null); do
 						fi
 					break
 					done
-				else
+				elif [ "$(wc -l < "$file1")" != 0 ]; then
+					i=$((i+1));
 					echo "Duplicate --> $file1 --> $file2"
 				fi
 				arr["$file2"]="$file2"
-				i=$((i+1));
 			fi
 		done
 	fi
