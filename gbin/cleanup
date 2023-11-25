@@ -1,0 +1,5 @@
+#!/bin/bash
+
+rm -rfv ~/.cache/thumbnails
+
+sudo apt-get autoclean && sudo apt-get autoremove
