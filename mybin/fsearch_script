@@ -1,4 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 
-echo -n "$(date "+%m-%d-%Y %H:%M --- ")" >> /home/srithar/log/cron_status.txt 2>&1
-fsearch -u  >> /home/srithar/log/cron_status.txt 2>&1;
+# Author: Srithar
+# Created: 7th May 2023
+# Last Modified: 25th November 2023
+
+# Description:
+# This utility will sync the FSearch App's DB
+
+export DISPLAY=:0
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+
+echo -n "$(date "+%m-%d-%Y %H:%M --- ")" >>/home/srithar/log/cron_status.txt 2>&1
+notify-send -i "$HOME/.icons/warning.png" "FSearch Started DB Update.."
+output=$(fsearch -u)
+echo "$output" >>/home/srithar/log/cron_status.txt 2>&1
+notify-send -i "$HOME/.icons/tick.svg" "Completed FSearch DB Update" "$output"
